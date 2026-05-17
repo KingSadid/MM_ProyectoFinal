@@ -34,7 +34,7 @@ class FoodDetailScreen extends StatelessWidget {
                             vertical: 4,
                           ),
                           decoration: BoxDecoration(
-                            color: AppTheme.primaryGreen.withOpacity(0.1),
+                            color: AppTheme.primaryGreen.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: const Text(
@@ -113,7 +113,7 @@ class FoodDetailScreen extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: CircleAvatar(
-                backgroundColor: Colors.white.withOpacity(0.9),
+                backgroundColor: Colors.white.withValues(alpha: 0.9),
                 child: IconButton(
                   icon: const Icon(
                     Icons.arrow_back,

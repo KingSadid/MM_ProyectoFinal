@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mm_proyecto_final/main.dart';
 import 'package:mm_proyecto_final/screens/food_detail_screen.dart';
+import 'package:mm_proyecto_final/widgets/custom_app_bar.dart';
 import 'package:mm_proyecto_final/widgets/info_card.dart';
 import 'package:mm_proyecto_final/widgets/meal_item.dart';
 import 'package:mm_proyecto_final/widgets/progress_bar.dart';
@@ -17,9 +18,23 @@ class DiaryScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppTheme.backgroundMint,
-      body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      appBar: CustomAppBar(
+        leading: GestureDetector(
+          onTap: () => controller.navigateTo(3),
+          child: CircleAvatar(
+            radius: 20,
+            backgroundImage: NetworkImage(MockData.user.avatarUrl),
+          ),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.notifications_outlined, color: AppTheme.textPrimary),
+            onPressed: () {},
+          ),
+        ],
+      ),
+      body: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
           children: [
             InfoCard(
               child: Column(
@@ -117,7 +132,6 @@ class DiaryScreen extends StatelessWidget {
             const SizedBox(height: 80),
           ],
         ),
-      ),
     );
   }
 

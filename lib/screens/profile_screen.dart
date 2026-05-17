@@ -204,7 +204,7 @@ class ProfileScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: AppTheme.primaryGreen.withOpacity(0.06),
+        color: AppTheme.primaryGreen.withValues(alpha: 0.06),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -217,7 +217,7 @@ class ProfileScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
             decoration: BoxDecoration(
-              color: valueColor.withOpacity(0.1),
+              color: valueColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(

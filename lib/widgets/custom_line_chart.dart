@@ -95,7 +95,7 @@ class _LineChartPainter extends CustomPainter {
     areaPath.close();
     final areaPaint = Paint()
       ..shader = LinearGradient(
-        colors: [lineColor.withOpacity(0.2), lineColor.withOpacity(0.0)],
+        colors: [lineColor.withValues(alpha: 0.2), lineColor.withValues(alpha: 0.0)],
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
       ).createShader(Rect.fromLTWH(padding.left, padding.top, chartWidth, chartHeight));

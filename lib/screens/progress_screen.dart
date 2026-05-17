@@ -71,7 +71,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: AppTheme.waterBlue.withOpacity(0.1),
+                        color: AppTheme.waterBlue.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: const Text(

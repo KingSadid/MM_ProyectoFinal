@@ -81,7 +81,7 @@ class HomeScreen extends StatelessWidget {
                   text: 'Registrar Agua',
                   icon: Icons.add,
                   isPrimary: true,
-                  backgroundColor: AppTheme.waterBlue.withOpacity(0.15),
+                  backgroundColor: AppTheme.waterBlue.withValues(alpha: 0.15),
                   foregroundColor: AppTheme.waterBlue,
                   onPressed: () => controller.addWater(0.25),
                 ),
@@ -116,7 +116,7 @@ class HomeScreen extends StatelessWidget {
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: AppTheme.primaryGreen.withOpacity(0.1),
+                        color: AppTheme.primaryGreen.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
@@ -217,7 +217,7 @@ class HomeScreen extends StatelessWidget {
                     color: AppTheme.waterLight,
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
-                      color: AppTheme.waterBlue.withOpacity(0.2),
+                      color: AppTheme.waterBlue.withValues(alpha: 0.2),
                     ),
                   ),
                   child: Text(
@@ -245,7 +245,7 @@ class HomeScreen extends StatelessWidget {
                         width: 48,
                         height: 48,
                         decoration: BoxDecoration(
-                          color: AppTheme.primaryGreen.withOpacity(0.1),
+                          color: AppTheme.primaryGreen.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: const Icon(
@@ -273,7 +273,7 @@ class HomeScreen extends StatelessWidget {
                         width: 48,
                         height: 48,
                         decoration: BoxDecoration(
-                          color: AppTheme.waterBlue.withOpacity(0.1),
+                          color: AppTheme.waterBlue.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: const Icon(

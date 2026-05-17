@@ -72,7 +72,7 @@ class _RingPainter extends CustomPainter {
 
     final progressPaint = Paint()
       ..shader = LinearGradient(
-        colors: [color.withOpacity(0.7), color],
+        colors: [color.withValues(alpha: 0.7), color],
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
       ).createShader(Rect.fromCircle(center: center, radius: radius))
