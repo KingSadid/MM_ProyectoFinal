@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mm_proyecto_final/main.dart';
+import 'package:mm_proyecto_final/screens/splash_screen.dart';
 import 'package:mm_proyecto_final/widgets/custom_app_bar.dart';
 import 'package:mm_proyecto_final/widgets/info_card.dart';
 import 'package:mm_proyecto_final/widgets/toggle_setting_item.dart';
@@ -30,10 +31,10 @@ class SettingsScreen extends StatelessWidget {
                 Text(
                   'PREFERENCIAS DE LA APP',
                   style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                    color: AppTheme.textSecondary,
-                    fontSize: 11,
-                    letterSpacing: 0.5,
-                  ),
+                        color: AppTheme.textSecondary,
+                        fontSize: 11,
+                        letterSpacing: 0.5,
+                      ),
                 ),
                 const Divider(height: 24),
                 ListenableBuilder(
@@ -83,10 +84,10 @@ class SettingsScreen extends StatelessWidget {
                 Text(
                   'CUENTA',
                   style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                    color: AppTheme.textSecondary,
-                    fontSize: 11,
-                    letterSpacing: 0.5,
-                  ),
+                        color: AppTheme.textSecondary,
+                        fontSize: 11,
+                        letterSpacing: 0.5,
+                      ),
                 ),
                 const Divider(height: 24),
                 ListTile(
@@ -131,7 +132,12 @@ class SettingsScreen extends StatelessWidget {
                     'Cerrar Sesión',
                     style: TextStyle(color: AppTheme.accentRed),
                   ),
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (_) => const SplashScreen()),
+                      (route) => false,
+                    );
+                  },
                 ),
               ],
             ),

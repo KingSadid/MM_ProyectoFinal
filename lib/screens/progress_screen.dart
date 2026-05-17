@@ -16,6 +16,10 @@ class ProgressScreen extends StatefulWidget {
 class _ProgressScreenState extends State<ProgressScreen> {
   int _selectedTab = 0;
 
+  bool get _isWater => _selectedTab == 0;
+
+  Color get _activeColor => _isWater ? AppTheme.waterBlue : AppTheme.primaryGreen;
+
   @override
   Widget build(BuildContext context) {
     final controller = AppControllerScope.of(context);
@@ -23,7 +27,21 @@ class _ProgressScreenState extends State<ProgressScreen> {
 
     return Scaffold(
       backgroundColor: AppTheme.backgroundMint,
-      appBar: const CustomAppBar(title: 'Resumen Semanal'),
+      appBar: CustomAppBar(
+        leading: GestureDetector(
+          onTap: () => controller.navigateTo(3),
+          child: CircleAvatar(
+            radius: 20,
+            backgroundImage: NetworkImage(MockData.user.avatarUrl),
+          ),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.notifications_outlined, color: AppTheme.textPrimary),
+            onPressed: () {},
+          ),
+        ],
+      ),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
         children: [
@@ -39,109 +57,65 @@ class _ProgressScreenState extends State<ProgressScreen> {
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
-              children: [_buildTab('Agua', 0), _buildTab('Nutrición', 1)],
-            ),
-          ),
-          const SizedBox(height: 20),
-          InfoCard(
-            color: const Color(0xFFEBF5FB),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.water_drop,
-                          color: AppTheme.waterBlue,
-                          size: 20,
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          'Ingesta Promedio',
-                          style: Theme.of(context).textTheme.titleMedium,
-                        ),
-                      ],
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppTheme.waterBlue.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: const Text(
-                        'Esta Semana',
-                        style: TextStyle(
-                          color: AppTheme.waterBlue,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  '2.4 Litros / Día',
-                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    color: AppTheme.textPrimary,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Row(
-                  children: [
-                    const Icon(
-                      Icons.trending_up,
-                      color: AppTheme.primaryGreen,
-                      size: 16,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      '+0.2L desde la semana pasada',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: AppTheme.primaryGreen,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
+                _buildTab('Agua', 0, AppTheme.waterBlue),
+                _buildTab('Nutrición', 1, AppTheme.primaryGreen),
               ],
             ),
           ),
+          const SizedBox(height: 20),
+          _isWater
+              ? _buildSummaryCard(
+                  icon: Icons.water_drop,
+                  label: 'Ingesta Promedio',
+                  value: '2.4 Litros / Día',
+                  badge: 'Esta Semana',
+                  trend: '+0.2L desde la semana pasada',
+                  trendColor: AppTheme.primaryGreen,
+                  cardColor: const Color(0xFFEBF5FB),
+                )
+              : _buildSummaryCard(
+                  icon: Icons.local_fire_department,
+                  label: 'Promedio Calórico',
+                  value: '1,850 kcal / Día',
+                  badge: 'Esta Semana',
+                  trend: '-150 kcal desde la semana pasada',
+                  trendColor: AppTheme.waterBlue,
+                  cardColor: const Color(0xFFE8F8EE),
+                ),
           const SizedBox(height: 24),
           Text(
-            'TENDENCIA DE HIDRATACIÓN',
+            _isWater ? 'TENDENCIA DE HIDRATACIÓN' : 'TENDENCIA CALÓRICA',
             style: Theme.of(context).textTheme.labelLarge?.copyWith(
-              color: AppTheme.textSecondary,
-              fontSize: 12,
-            ),
+                  color: AppTheme.textSecondary,
+                  fontSize: 12,
+                ),
           ),
           const SizedBox(height: 12),
           InfoCard(
             child: CustomLineChart(
-              data: stats.waterTrend,
+              data: _isWater
+                  ? stats.waterTrend
+                  : stats.caloriesTrend.map((e) => e.toDouble()).toList(),
               labels: const ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
-              maxY: 3.5,
+              maxY: _isWater ? 3.5 : 2500,
+              lineColor: _activeColor,
             ),
           ),
           const SizedBox(height: 24),
           Text(
             'CONSISTENCIA NUTRICIONAL',
             style: Theme.of(context).textTheme.labelLarge?.copyWith(
-              color: AppTheme.textSecondary,
-              fontSize: 12,
-            ),
+                  color: AppTheme.textSecondary,
+                  fontSize: 12,
+                ),
           ),
           const SizedBox(height: 12),
           InfoCard(
             child: CustomBarChart(
               values: stats.nutritionConsistency,
               activeIndex: 3,
+              activeColor: _activeColor,
               labels: const ['L', 'M', 'M', 'J', 'V', 'S', 'D'],
             ),
           ),
@@ -153,19 +127,21 @@ class _ProgressScreenState extends State<ProgressScreen> {
                 Text(
                   'CONSEJO CLAVE',
                   style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                    color: AppTheme.textSecondary,
-                    fontSize: 12,
-                  ),
+                        color: AppTheme.textSecondary,
+                        fontSize: 12,
+                      ),
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Normalmente consumes menos agua los fines de semana. Intenta configurar un recordatorio para los sábados por la tarde.',
+                  _isWater
+                      ? 'Normalmente consumes menos agua los fines de semana. Intenta configurar un recordatorio para los sábados por la tarde.'
+                      : 'Tu ingesta de proteínas es baja los miércoles y domingos. Considera añadir una fuente de proteína en esas comidas.',
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 const SizedBox(height: 12),
                 CustomButton(
-                  text: 'Configurar Recordatorio',
-                  icon: Icons.alarm,
+                  text: _isWater ? 'Configurar Recordatorio' : 'Ver Plan Nutricional',
+                  icon: _isWater ? Icons.alarm : Icons.restaurant_menu,
                   isPrimary: false,
                   onPressed: () {},
                 ),
@@ -178,7 +154,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
     );
   }
 
-  Widget _buildTab(String label, int index) {
+  Widget _buildTab(String label, int index, Color activeColor) {
     final isSelected = _selectedTab == index;
     return Expanded(
       child: GestureDetector(
@@ -186,7 +162,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
-            color: isSelected ? AppTheme.primaryGreen : Colors.transparent,
+            color: isSelected ? activeColor : Colors.transparent,
             borderRadius: BorderRadius.circular(10),
           ),
           child: Text(
@@ -199,6 +175,76 @@ class _ProgressScreenState extends State<ProgressScreen> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildSummaryCard({
+    required IconData icon,
+    required String label,
+    required String value,
+    required String badge,
+    required String trend,
+    required Color trendColor,
+    required Color cardColor,
+  }) {
+    return InfoCard(
+      color: cardColor,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Icon(icon, color: _activeColor, size: 20),
+                  const SizedBox(width: 8),
+                  Text(
+                    label,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                ],
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: _activeColor.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  badge,
+                  style: TextStyle(
+                    color: _activeColor,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Text(
+            value,
+            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  color: AppTheme.textPrimary,
+                ),
+          ),
+          const SizedBox(height: 4),
+          Row(
+            children: [
+              Icon(Icons.trending_up, color: trendColor, size: 16),
+              const SizedBox(width: 4),
+              Text(
+                trend,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: trendColor,
+                      fontWeight: FontWeight.w600,
+                    ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

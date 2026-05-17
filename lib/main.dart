@@ -96,10 +96,12 @@ class DailyLog {
 class WeeklyStats {
   final List<double> waterTrend;
   final List<int> nutritionConsistency;
+  final List<int> caloriesTrend;
 
   const WeeklyStats({
     required this.waterTrend,
     required this.nutritionConsistency,
+    required this.caloriesTrend,
   });
 }
 
@@ -181,6 +183,7 @@ class MockData {
   static const WeeklyStats weeklyStats = WeeklyStats(
     waterTrend: [1.2, 1.8, 1.5, 2.5, 3.0, 2.4, 2.8],
     nutritionConsistency: [60, 80, 75, 90, 80, 50, 30],
+    caloriesTrend: [1800, 1950, 1700, 2100, 2050, 1600, 1850],
   );
 
   static const FoodItem featuredFood = FoodItem(

@@ -22,10 +22,16 @@ class _SplashScreenState extends State<SplashScreen>
       duration: const Duration(milliseconds: 2500),
     );
     _fadeAnimation = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(parent: _controller, curve: const Interval(0, 0.3, curve: Curves.easeOut)),
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0, 0.3, curve: Curves.easeOut),
+      ),
     );
     _progressAnimation = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(parent: _controller, curve: const Interval(0.1, 0.9, curve: Curves.easeInOut)),
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.1, 0.9, curve: Curves.easeInOut),
+      ),
     );
 
     _controller.addStatusListener((status) {
@@ -55,21 +61,21 @@ class _SplashScreenState extends State<SplashScreen>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              CustomPaint(size: const Size(80, 80), painter: _DropsPainter()),
+              Image.asset('img/drops.png', width: 80, height: 80),
               const SizedBox(height: 24),
               Text(
                 'Nutritionism',
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  color: AppTheme.darkGreen,
-                  fontWeight: FontWeight.w700,
-                ),
+                      color: AppTheme.darkGreen,
+                      fontWeight: FontWeight.w700,
+                    ),
               ),
               const SizedBox(height: 8),
               Text(
                 'Un respiro digital de aire fresco',
-                style: Theme.of(
-                  context,
-                ).textTheme.bodyMedium?.copyWith(color: AppTheme.textSecondary),
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: AppTheme.textSecondary,
+                    ),
               ),
               const SizedBox(height: 32),
               SizedBox(
@@ -97,60 +103,4 @@ class _SplashScreenState extends State<SplashScreen>
       ),
     );
   }
-}
-
-class _DropsPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final drop1Paint = Paint()..color = const Color(0xFFA8DADC);
-    final drop2Paint = Paint()..color = AppTheme.waterBlue;
-
-    final path1 = Path();
-    path1.moveTo(size.width * 0.35, size.height * 0.2);
-    path1.quadraticBezierTo(
-      size.width * 0.45,
-      size.height * 0.5,
-      size.width * 0.35,
-      size.height * 0.6,
-    );
-    path1.arcToPoint(
-      Offset(size.width * 0.25, size.height * 0.6),
-      radius: const Radius.circular(12),
-      clockwise: false,
-    );
-    path1.quadraticBezierTo(
-      size.width * 0.15,
-      size.height * 0.5,
-      size.width * 0.35,
-      size.height * 0.2,
-    );
-    path1.close();
-
-    final path2 = Path();
-    path2.moveTo(size.width * 0.55, size.height * 0.1);
-    path2.quadraticBezierTo(
-      size.width * 0.75,
-      size.height * 0.55,
-      size.width * 0.55,
-      size.height * 0.8,
-    );
-    path2.arcToPoint(
-      Offset(size.width * 0.35, size.height * 0.8),
-      radius: const Radius.circular(20),
-      clockwise: false,
-    );
-    path2.quadraticBezierTo(
-      size.width * 0.15,
-      size.height * 0.55,
-      size.width * 0.55,
-      size.height * 0.1,
-    );
-    path2.close();
-
-    canvas.drawPath(path1, drop1Paint);
-    canvas.drawPath(path2, drop2Paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter old) => false;
 }
