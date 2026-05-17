@@ -115,10 +115,6 @@ class AppSettings {
   });
 }
 
-// ============================================================
-// MOCK DATA
-// ============================================================
-
 class MockData {
   static final User user = User(
     name: 'Michael Quintero',
@@ -179,11 +175,7 @@ class MockData {
       ],
       totalKcal: 410,
     ),
-    const MealSection(
-      type: 'Cena',
-      items: [],
-      totalKcal: 0,
-    ),
+    const MealSection(type: 'Cena', items: [], totalKcal: 0),
   ];
 
   static const WeeklyStats weeklyStats = WeeklyStats(
@@ -201,9 +193,6 @@ class MockData {
   );
 }
 
-// ============================================================
-// APP CONTROLLER
-// ============================================================
 
 class AppController extends ChangeNotifier {
   AppController() {
@@ -262,9 +251,6 @@ class AppController extends ChangeNotifier {
   }
 }
 
-// ============================================================
-// APP CONTROLLER SCOPE
-// ============================================================
 
 class AppControllerScope extends InheritedNotifier<AppController> {
   const AppControllerScope({
@@ -274,15 +260,13 @@ class AppControllerScope extends InheritedNotifier<AppController> {
   });
 
   static AppController of(BuildContext context) {
-    final scope = context.dependOnInheritedWidgetOfExactType<AppControllerScope>();
+    final scope = context
+        .dependOnInheritedWidgetOfExactType<AppControllerScope>();
     assert(scope != null, 'No AppControllerScope found in context');
     return scope!.notifier!;
   }
 }
 
-// ============================================================
-// THEME
-// ============================================================
 
 class AppTheme {
   static const Color primaryGreen = Color(0xFF2ECC71);
@@ -360,9 +344,7 @@ class AppTheme {
       cardTheme: CardThemeData(
         color: cardWhite,
         elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         margin: EdgeInsets.zero,
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
@@ -374,10 +356,7 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
-          textStyle: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
+          textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
@@ -388,10 +367,7 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
-          textStyle: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-          ),
+          textStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
         ),
       ),
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
@@ -431,9 +407,6 @@ class AppTheme {
   }
 }
 
-// ============================================================
-// MAIN APP
-// ============================================================
 
 void main() {
   runApp(const MyApp());
