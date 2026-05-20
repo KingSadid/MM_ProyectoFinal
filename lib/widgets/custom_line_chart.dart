@@ -128,7 +128,7 @@ class _LineChartPainter extends CustomPainter {
       textPainter.paint(canvas, Offset(pt.dx - textPainter.width / 2, size.height - 20));
     }
 
-    // Highlight Saturday (index 5)
+    // Highlight Saturday 
     if (points.length > 5) {
       final saturdayPt = points[5];
       canvas.drawCircle(saturdayPt, 8, Paint()..color = Colors.white);
