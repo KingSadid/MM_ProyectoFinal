@@ -12,16 +12,18 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = AppControllerScope.of(context);
     final settings = controller.settings;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: AppTheme.backgroundMint,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: const CustomAppBar(title: 'Ajustes'),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
         children: [
           Text(
             'Personaliza tu experiencia y preferencias.',
-            style: Theme.of(context).textTheme.bodyMedium,
+            style: theme.textTheme.bodyMedium,
           ),
           const SizedBox(height: 24),
           InfoCard(
@@ -30,8 +32,8 @@ class SettingsScreen extends StatelessWidget {
               children: [
                 Text(
                   'PREFERENCIAS DE LA APP',
-                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                        color: AppTheme.textSecondary,
+                  style: theme.textTheme.labelLarge?.copyWith(
+                        color: isDark ? AppTheme.textSecondaryDark : AppTheme.textSecondary,
                         fontSize: 11,
                         letterSpacing: 0.5,
                       ),
@@ -54,7 +56,7 @@ class SettingsScreen extends StatelessWidget {
                         const Divider(height: 1),
                         ToggleSettingItem(
                           icon: Icons.dark_mode_outlined,
-                          iconColor: const Color(0xFF6B7280),
+                          iconColor: isDark ? AppTheme.primaryGreen : const Color(0xFF6B7280),
                           title: 'Modo Oscuro',
                           subtitle: 'Cambiar a un tema más oscuro',
                           value: settings.darkMode,
@@ -63,7 +65,7 @@ class SettingsScreen extends StatelessWidget {
                         const Divider(height: 1),
                         ToggleSettingItem(
                           icon: Icons.scale_outlined,
-                          iconColor: const Color(0xFF6B7280),
+                          iconColor: isDark ? AppTheme.waterBlue : const Color(0xFF6B7280),
                           title: 'Unidades (ml/oz)',
                           subtitle: 'Usar onzas en lugar de mililitros',
                           value: settings.useOz,
@@ -83,8 +85,8 @@ class SettingsScreen extends StatelessWidget {
               children: [
                 Text(
                   'CUENTA',
-                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                        color: AppTheme.textSecondary,
+                  style: theme.textTheme.labelLarge?.copyWith(
+                        color: isDark ? AppTheme.textSecondaryDark : AppTheme.textSecondary,
                         fontSize: 11,
                         letterSpacing: 0.5,
                       ),
@@ -105,10 +107,15 @@ class SettingsScreen extends StatelessWidget {
                       size: 20,
                     ),
                   ),
-                  title: const Text('Gestionar Perfil'),
-                  trailing: const Icon(
+                  title: Text(
+                    'Gestionar Perfil',
+                    style: TextStyle(
+                      color: isDark ? AppTheme.textPrimaryDark : AppTheme.textPrimary,
+                    ),
+                  ),
+                  trailing: Icon(
                     Icons.chevron_right,
-                    color: AppTheme.textSecondary,
+                    color: isDark ? AppTheme.textSecondaryDark : AppTheme.textSecondary,
                   ),
                   onTap: () {},
                 ),

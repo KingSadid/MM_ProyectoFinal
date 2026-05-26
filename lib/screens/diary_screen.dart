@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mm_proyecto_final/main.dart';
 import 'package:mm_proyecto_final/screens/food_detail_screen.dart';
+import 'package:mm_proyecto_final/screens/notifications_screen.dart';
 import 'package:mm_proyecto_final/widgets/custom_app_bar.dart';
 import 'package:mm_proyecto_final/widgets/info_card.dart';
 import 'package:mm_proyecto_final/widgets/meal_item.dart';
@@ -15,9 +16,11 @@ class DiaryScreen extends StatelessWidget {
     final controller = AppControllerScope.of(context);
     final log = controller.todayLog;
     final meals = controller.meals;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: AppTheme.backgroundMint,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: CustomAppBar(
         leading: GestureDetector(
           onTap: () => controller.navigateTo(3),
@@ -28,8 +31,27 @@ class DiaryScreen extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.notifications_outlined, color: AppTheme.textPrimary),
-            onPressed: () {},
+            icon: Icon(
+              Icons.notifications_outlined,
+              color: isDark ? AppTheme.textPrimaryDark : AppTheme.textPrimary,
+            ),
+            onPressed: () {
+              Navigator.of(context).push(
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) => const NotificationsScreen(),
+                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                    const begin = Offset(1.0, 0.0);
+                    const end = Offset.zero;
+                    const curve = Curves.easeInOutCubic;
+                    var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                    return SlideTransition(
+                      position: animation.drive(tween),
+                      child: child,
+                    );
+                  },
+                ),
+              );
+            },
           ),
         ],
       ),
@@ -68,11 +90,13 @@ class DiaryScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       _buildMacroColumn(
+                        context,
                         'Proteína',
                         log.proteinG,
                         log.proteinGoal,
                       ),
                       _buildMacroColumn(
+                        context,
                         'Carbohidratos',
                         log.carbsG,
                         log.carbsGoal,
@@ -135,25 +159,33 @@ class DiaryScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMacroColumn(String label, double current, double goal) {
+  Widget _buildMacroColumn(BuildContext context, String label, double current, double goal) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     return Column(
       children: [
         Text(
           label,
-          style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary),
+          style: TextStyle(
+            fontSize: 12,
+            color: isDark ? AppTheme.textSecondaryDark : AppTheme.textSecondary,
+          ),
         ),
         const SizedBox(height: 4),
         Text(
           '${current.round()}g',
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w700,
-            color: AppTheme.textPrimary,
+            color: isDark ? AppTheme.textPrimaryDark : AppTheme.textPrimary,
           ),
         ),
         Text(
           '/${goal.round()}g',
-          style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary),
+          style: TextStyle(
+            fontSize: 12,
+            color: isDark ? AppTheme.textSecondaryDark : AppTheme.textSecondary,
+          ),
         ),
       ],
     );

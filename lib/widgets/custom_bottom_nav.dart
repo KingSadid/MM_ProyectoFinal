@@ -13,31 +13,37 @@ class CustomBottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     return Container(
-      decoration: const BoxDecoration(
-        color: Colors.white,
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
         border: Border(
-          top: BorderSide(color: Color(0xFFE5E7EB), width: 0.5),
+          top: BorderSide(
+            color: isDark ? const Color(0xFF2C3E50) : const Color(0xFFE5E7EB),
+            width: 0.5,
+          ),
         ),
       ),
       child: SafeArea(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            _buildItem(Icons.home_outlined, Icons.home_rounded, 'Inicio', 0),
-            _buildItem(Icons.book_outlined, Icons.book_rounded, 'Diario', 1),
-            _buildItem(Icons.trending_up_outlined, Icons.trending_up_rounded, 'Progreso', 2),
-            _buildItem(Icons.person_outline_rounded, Icons.person_rounded, 'Perfil', 3),
-            _buildItem(Icons.settings_outlined, Icons.settings_rounded, 'Ajustes', 4),
+            _buildItem(Icons.home_outlined, Icons.home_rounded, 'Inicio', 0, context),
+            _buildItem(Icons.book_outlined, Icons.book_rounded, 'Diario', 1, context),
+            _buildItem(Icons.trending_up_outlined, Icons.trending_up_rounded, 'Progreso', 2, context),
+            _buildItem(Icons.person_outline_rounded, Icons.person_rounded, 'Perfil', 3, context),
+            _buildItem(Icons.settings_outlined, Icons.settings_rounded, 'Ajustes', 4, context),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildItem(IconData icon, IconData activeIcon, String label, int index) {
+  Widget _buildItem(IconData icon, IconData activeIcon, String label, int index, BuildContext context) {
+    final theme = Theme.of(context);
     final isSelected = currentIndex == index;
-    final color = isSelected ? AppTheme.primaryGreen : AppTheme.textSecondary;
+    final color = isSelected ? theme.colorScheme.primary : theme.textTheme.bodyMedium?.color ?? AppTheme.textSecondary;
     return Expanded(
       child: GestureDetector(
         onTap: () => onTap(index),

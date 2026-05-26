@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mm_proyecto_final/main.dart';
 
 class InfoCard extends StatelessWidget {
   final Widget child;
@@ -23,7 +22,7 @@ class InfoCard extends StatelessWidget {
         width: double.infinity,
         padding: padding,
         decoration: BoxDecoration(
-          color: color ?? AppTheme.cardWhite,
+          color: color ?? Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(

@@ -11,9 +11,11 @@ class FoodDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final food = MockData.featuredFood;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: AppTheme.backgroundMint,
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: Stack(
         children: [
           Column(
@@ -53,7 +55,7 @@ class FoodDetailScreen extends StatelessWidget {
                             vertical: 4,
                           ),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFFFE4E1),
+                            color: isDark ? const Color(0xFF3A1A1A) : const Color(0xFFFFE4E1),
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Text(
@@ -70,13 +72,13 @@ class FoodDetailScreen extends StatelessWidget {
                     const SizedBox(height: 12),
                     Text(
                       food.name,
-                      style: Theme.of(context).textTheme.headlineSmall,
+                      style: theme.textTheme.headlineSmall,
                     ),
                     const SizedBox(height: 12),
                     Text(
                       'Una fuente de nutrientes que combina carbohidratos complejos, grasas saludables y proteínas de alta calidad. Perfectamente equilibrado para proporcionar energía sostenida y claridad mental durante toda la tarde.',
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: AppTheme.textSecondary,
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                        color: isDark ? AppTheme.textSecondaryDark : AppTheme.textSecondary,
                       ),
                     ),
                     const SizedBox(height: 24),
@@ -94,7 +96,7 @@ class FoodDetailScreen extends StatelessWidget {
                               const SizedBox(width: 8),
                               Text(
                                 'Perfil de Macronutrientes',
-                                style: Theme.of(context).textTheme.titleMedium,
+                                style: theme.textTheme.titleMedium,
                               ),
                             ],
                           ),
@@ -113,11 +115,13 @@ class FoodDetailScreen extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: CircleAvatar(
-                backgroundColor: Colors.white.withValues(alpha: 0.9),
+                backgroundColor: isDark
+                    ? const Color(0xFF18221B).withValues(alpha: 0.9)
+                    : Colors.white.withValues(alpha: 0.9),
                 child: IconButton(
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.arrow_back,
-                    color: AppTheme.textPrimary,
+                    color: isDark ? AppTheme.textPrimaryDark : AppTheme.textPrimary,
                   ),
                   onPressed: () => Navigator.of(context).pop(),
                 ),

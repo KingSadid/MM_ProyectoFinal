@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mm_proyecto_final/main.dart';
+import 'package:mm_proyecto_final/screens/notifications_screen.dart';
 import 'package:mm_proyecto_final/widgets/custom_app_bar.dart';
 import 'package:mm_proyecto_final/widgets/custom_button.dart';
 import 'package:mm_proyecto_final/widgets/info_card.dart';
@@ -13,9 +14,11 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = AppControllerScope.of(context);
     final log = controller.todayLog;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: AppTheme.backgroundMint,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: CustomAppBar(
         leading: GestureDetector(
           onTap: () => controller.navigateTo(3),
@@ -26,11 +29,27 @@ class HomeScreen extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            icon: const Icon(
+            icon: Icon(
               Icons.notifications_outlined,
-              color: AppTheme.textPrimary,
+              color: isDark ? AppTheme.textPrimaryDark : AppTheme.textPrimary,
             ),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) => const NotificationsScreen(),
+                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                    const begin = Offset(1.0, 0.0);
+                    const end = Offset.zero;
+                    const curve = Curves.easeInOutCubic;
+                    var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                    return SlideTransition(
+                      position: animation.drive(tween),
+                      child: child,
+                    );
+                  },
+                ),
+              );
+            },
           ),
         ],
       ),
@@ -38,7 +57,7 @@ class HomeScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
         children: [
           InfoCard(
-            color: const Color(0xFFEBF5FB),
+            color: isDark ? AppTheme.waterLightDark : const Color(0xFFEBF5FB),
             child: Column(
               children: [
                 Text(
@@ -214,7 +233,7 @@ class HomeScreen extends StatelessWidget {
                     vertical: 6,
                   ),
                   decoration: BoxDecoration(
-                    color: AppTheme.waterLight,
+                    color: isDark ? AppTheme.waterLightDark : AppTheme.waterLight,
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
                       color: AppTheme.waterBlue.withValues(alpha: 0.2),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mm_proyecto_final/main.dart';
+import 'package:mm_proyecto_final/screens/notifications_screen.dart';
 import 'package:mm_proyecto_final/widgets/custom_app_bar.dart';
 import 'package:mm_proyecto_final/widgets/custom_bar_chart.dart';
 import 'package:mm_proyecto_final/widgets/custom_button.dart';
@@ -24,9 +25,11 @@ class _ProgressScreenState extends State<ProgressScreen> {
   Widget build(BuildContext context) {
     final controller = AppControllerScope.of(context);
     final stats = controller.weeklyStats;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: AppTheme.backgroundMint,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: CustomAppBar(
         leading: GestureDetector(
           onTap: () => controller.navigateTo(3),
@@ -37,8 +40,27 @@ class _ProgressScreenState extends State<ProgressScreen> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.notifications_outlined, color: AppTheme.textPrimary),
-            onPressed: () {},
+            icon: Icon(
+              Icons.notifications_outlined,
+              color: isDark ? AppTheme.textPrimaryDark : AppTheme.textPrimary,
+            ),
+            onPressed: () {
+              Navigator.of(context).push(
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) => const NotificationsScreen(),
+                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                    const begin = Offset(1.0, 0.0);
+                    const end = Offset.zero;
+                    const curve = Curves.easeInOutCubic;
+                    var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                    return SlideTransition(
+                      position: animation.drive(tween),
+                      child: child,
+                    );
+                  },
+                ),
+              );
+            },
           ),
         ],
       ),
@@ -47,19 +69,19 @@ class _ProgressScreenState extends State<ProgressScreen> {
         children: [
           Text(
             'Sigue tu hidratación e ingesta calórica a lo largo del tiempo.',
-            style: Theme.of(context).textTheme.bodyMedium,
+            style: theme.textTheme.bodyMedium,
           ),
           const SizedBox(height: 16),
           Container(
             padding: const EdgeInsets.all(4),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: isDark ? const Color(0xFF1E2721) : Colors.white,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
               children: [
-                _buildTab('Agua', 0, AppTheme.waterBlue),
-                _buildTab('Nutrición', 1, AppTheme.primaryGreen),
+                _buildTab('Agua', 0, AppTheme.waterBlue, isDark),
+                _buildTab('Nutrición', 1, AppTheme.primaryGreen, isDark),
               ],
             ),
           ),
@@ -72,7 +94,8 @@ class _ProgressScreenState extends State<ProgressScreen> {
                   badge: 'Esta Semana',
                   trend: '+0.2L desde la semana pasada',
                   trendColor: AppTheme.primaryGreen,
-                  cardColor: const Color(0xFFEBF5FB),
+                  cardColor: isDark ? AppTheme.waterLightDark : const Color(0xFFEBF5FB),
+                  isDark: isDark,
                 )
               : _buildSummaryCard(
                   icon: Icons.local_fire_department,
@@ -81,13 +104,14 @@ class _ProgressScreenState extends State<ProgressScreen> {
                   badge: 'Esta Semana',
                   trend: '-150 kcal desde la semana pasada',
                   trendColor: AppTheme.waterBlue,
-                  cardColor: const Color(0xFFE8F8EE),
+                  cardColor: isDark ? const Color(0xFF162D20) : const Color(0xFFE8F8EE),
+                  isDark: isDark,
                 ),
           const SizedBox(height: 24),
           Text(
             _isWater ? 'TENDENCIA DE HIDRATACIÓN' : 'TENDENCIA CALÓRICA',
-            style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                  color: AppTheme.textSecondary,
+            style: theme.textTheme.labelLarge?.copyWith(
+                  color: isDark ? AppTheme.textSecondaryDark : AppTheme.textSecondary,
                   fontSize: 12,
                 ),
           ),
@@ -105,8 +129,8 @@ class _ProgressScreenState extends State<ProgressScreen> {
           const SizedBox(height: 24),
           Text(
             'CONSISTENCIA NUTRICIONAL',
-            style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                  color: AppTheme.textSecondary,
+            style: theme.textTheme.labelLarge?.copyWith(
+                  color: isDark ? AppTheme.textSecondaryDark : AppTheme.textSecondary,
                   fontSize: 12,
                 ),
           ),
@@ -126,8 +150,8 @@ class _ProgressScreenState extends State<ProgressScreen> {
               children: [
                 Text(
                   'CONSEJO CLAVE',
-                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                        color: AppTheme.textSecondary,
+                  style: theme.textTheme.labelLarge?.copyWith(
+                        color: isDark ? AppTheme.textSecondaryDark : AppTheme.textSecondary,
                         fontSize: 12,
                       ),
                 ),
@@ -136,7 +160,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                   _isWater
                       ? 'Normalmente consumes menos agua los fines de semana. Intenta configurar un recordatorio para los sábados por la tarde.'
                       : 'Tu ingesta de proteínas es baja los miércoles y domingos. Considera añadir una fuente de proteína en esas comidas.',
-                  style: Theme.of(context).textTheme.bodyMedium,
+                  style: theme.textTheme.bodyMedium,
                 ),
                 const SizedBox(height: 12),
                 CustomButton(
@@ -154,7 +178,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
     );
   }
 
-  Widget _buildTab(String label, int index, Color activeColor) {
+  Widget _buildTab(String label, int index, Color activeColor, bool isDark) {
     final isSelected = _selectedTab == index;
     return Expanded(
       child: GestureDetector(
@@ -169,7 +193,9 @@ class _ProgressScreenState extends State<ProgressScreen> {
             label,
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: isSelected ? Colors.white : AppTheme.textSecondary,
+              color: isSelected
+                  ? Colors.white
+                  : (isDark ? AppTheme.textSecondaryDark : AppTheme.textSecondary),
               fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
               fontSize: 14,
             ),
@@ -187,7 +213,9 @@ class _ProgressScreenState extends State<ProgressScreen> {
     required String trend,
     required Color trendColor,
     required Color cardColor,
+    required bool isDark,
   }) {
+    final theme = Theme.of(context);
     return InfoCard(
       color: cardColor,
       child: Column(
@@ -202,7 +230,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                   const SizedBox(width: 8),
                   Text(
                     label,
-                    style: Theme.of(context).textTheme.titleMedium,
+                    style: theme.textTheme.titleMedium,
                   ),
                 ],
               ),
@@ -226,8 +254,8 @@ class _ProgressScreenState extends State<ProgressScreen> {
           const SizedBox(height: 12),
           Text(
             value,
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  color: AppTheme.textPrimary,
+            style: theme.textTheme.headlineMedium?.copyWith(
+                  color: isDark ? AppTheme.textPrimaryDark : AppTheme.textPrimary,
                 ),
           ),
           const SizedBox(height: 4),
@@ -237,7 +265,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
               const SizedBox(width: 4),
               Text(
                 trend,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                style: theme.textTheme.bodyMedium?.copyWith(
                       color: trendColor,
                       fontWeight: FontWeight.w600,
                     ),

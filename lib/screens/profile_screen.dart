@@ -10,9 +10,11 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = AppControllerScope.of(context);
     final user = controller.currentUser;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: AppTheme.backgroundMint,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: const CustomAppBar(),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
@@ -26,12 +28,12 @@ class ProfileScreen extends StatelessWidget {
                     CircleAvatar(
                       radius: 50,
                       backgroundImage: NetworkImage(user.avatarUrl),
-                      backgroundColor: AppTheme.softGray,
+                      backgroundColor: isDark ? const Color(0xFF1E2721) : AppTheme.softGray,
                     ),
                     Container(
                       padding: const EdgeInsets.all(4),
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.surface,
                         shape: BoxShape.circle,
                       ),
                       child: const CircleAvatar(
@@ -45,12 +47,14 @@ class ProfileScreen extends StatelessWidget {
                 const SizedBox(height: 12),
                 Text(
                   user.name,
-                  style: Theme.of(context).textTheme.headlineSmall,
+                  style: theme.textTheme.headlineSmall,
                 ),
                 const SizedBox(height: 4),
                 Text(
                   'Miembro activo desde ${user.memberSince.year}',
-                  style: Theme.of(context).textTheme.bodyMedium,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: isDark ? AppTheme.textSecondaryDark : AppTheme.textSecondary,
+                  ),
                 ),
               ],
             ),
@@ -61,17 +65,35 @@ class ProfileScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 _buildStatColumn(
+                  context,
                   Icons.calendar_today_outlined,
                   'EDAD',
                   '${user.age}',
+                  isDark,
                 ),
-                Container(height: 40, width: 1, color: const Color(0xFFE5E7EB)),
-                _buildStatColumn(Icons.height, 'ALTURA', '${user.heightCm} cm'),
-                Container(height: 40, width: 1, color: const Color(0xFFE5E7EB)),
+                Container(
+                  height: 40,
+                  width: 1,
+                  color: isDark ? const Color(0xFF2C3E50) : const Color(0xFFE5E7EB),
+                ),
                 _buildStatColumn(
+                  context,
+                  Icons.height,
+                  'ALTURA',
+                  '${user.heightCm} cm',
+                  isDark,
+                ),
+                Container(
+                  height: 40,
+                  width: 1,
+                  color: isDark ? const Color(0xFF2C3E50) : const Color(0xFFE5E7EB),
+                ),
+                _buildStatColumn(
+                  context,
                   Icons.monitor_weight_outlined,
                   'PESO',
                   '${user.weightKg.round()} kg',
+                  isDark,
                 ),
               ],
             ),
@@ -94,15 +116,15 @@ class ProfileScreen extends StatelessWidget {
                         const SizedBox(width: 8),
                         Text(
                           'Metabolismo',
-                          style: Theme.of(context).textTheme.titleMedium,
+                          style: theme.textTheme.titleMedium,
                         ),
                       ],
                     ),
                     IconButton(
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.edit,
                         size: 20,
-                        color: AppTheme.textSecondary,
+                        color: isDark ? AppTheme.textSecondaryDark : AppTheme.textSecondary,
                       ),
                       onPressed: () {},
                     ),
@@ -111,12 +133,14 @@ class ProfileScreen extends StatelessWidget {
                 const SizedBox(height: 8),
                 Text(
                   '1,450 kcal BMR',
-                  style: Theme.of(context).textTheme.headlineMedium,
+                  style: theme.textTheme.headlineMedium,
                 ),
                 const SizedBox(height: 8),
                 Text(
                   'Nivel de actividad moderado. Línea base calórica para mantenimiento.',
-                  style: Theme.of(context).textTheme.bodyMedium,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: isDark ? AppTheme.textSecondaryDark : AppTheme.textSecondary,
+                  ),
                 ),
               ],
             ),
@@ -139,15 +163,15 @@ class ProfileScreen extends StatelessWidget {
                         const SizedBox(width: 8),
                         Text(
                           'Objetivos',
-                          style: Theme.of(context).textTheme.titleMedium,
+                          style: theme.textTheme.titleMedium,
                         ),
                       ],
                     ),
                     IconButton(
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.edit,
                         size: 20,
-                        color: AppTheme.textSecondary,
+                        color: isDark ? AppTheme.textSecondaryDark : AppTheme.textSecondary,
                       ),
                       onPressed: () {},
                     ),
@@ -155,15 +179,19 @@ class ProfileScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 _buildGoalRow(
+                  context,
                   'Peso Objetivo',
                   '${user.goalWeightKg.round()} kg',
                   AppTheme.darkGreen,
+                  isDark,
                 ),
                 const SizedBox(height: 10),
                 _buildGoalRow(
+                  context,
                   'Proteína Diaria',
                   '${user.dailyProteinGoal}g',
                   AppTheme.waterBlue,
+                  isDark,
                 ),
               ],
             ),
@@ -174,37 +202,53 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildStatColumn(IconData icon, String label, String value) {
+  Widget _buildStatColumn(
+    BuildContext context,
+    IconData icon,
+    String label,
+    String value,
+    bool isDark,
+  ) {
     return Column(
       children: [
-        Icon(icon, size: 20, color: AppTheme.textSecondary),
+        Icon(
+          icon,
+          size: 20,
+          color: isDark ? AppTheme.textSecondaryDark : AppTheme.textSecondary,
+        ),
         const SizedBox(height: 8),
         Text(
           label,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 10,
-            color: AppTheme.textSecondary,
+            color: isDark ? AppTheme.textSecondaryDark : AppTheme.textSecondary,
             fontWeight: FontWeight.w600,
           ),
         ),
         const SizedBox(height: 4),
         Text(
           value,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w700,
-            color: AppTheme.textPrimary,
+            color: isDark ? AppTheme.textPrimaryDark : AppTheme.textPrimary,
           ),
         ),
       ],
     );
   }
 
-  Widget _buildGoalRow(String label, String value, Color valueColor) {
+  Widget _buildGoalRow(
+    BuildContext context,
+    String label,
+    String value,
+    Color valueColor,
+    bool isDark,
+  ) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: AppTheme.primaryGreen.withValues(alpha: 0.06),
+        color: AppTheme.primaryGreen.withValues(alpha: isDark ? 0.12 : 0.06),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -212,7 +256,10 @@ class ProfileScreen extends StatelessWidget {
         children: [
           Text(
             label,
-            style: const TextStyle(fontSize: 14, color: AppTheme.textPrimary),
+            style: TextStyle(
+              fontSize: 14,
+              color: isDark ? AppTheme.textPrimaryDark : AppTheme.textPrimary,
+            ),
           ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),

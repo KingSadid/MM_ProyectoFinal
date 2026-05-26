@@ -283,6 +283,13 @@ class AppTheme {
   static const Color accentRed = Color(0xFFEF4444);
   static const Color softGray = Color(0xFFF3F4F6);
 
+  // Dark Mode Colors
+  static const Color backgroundDark = Color(0xFF0F1511);
+  static const Color cardDark = Color(0xFF18221B);
+  static const Color textPrimaryDark = Color(0xFFECF0F1);
+  static const Color textSecondaryDark = Color(0xFF94A3B8);
+  static const Color waterLightDark = Color(0xFF162A3A);
+
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
@@ -408,6 +415,132 @@ class AppTheme {
       ),
     );
   }
+
+  static ThemeData get darkTheme {
+    return ThemeData(
+      useMaterial3: true,
+      scaffoldBackgroundColor: backgroundDark,
+      primaryColor: primaryGreen,
+      colorScheme: const ColorScheme.dark(
+        primary: primaryGreen,
+        secondary: waterBlue,
+        surface: cardDark,
+        error: accentRed,
+        onPrimary: Colors.white,
+        onSecondary: Colors.white,
+        onSurface: textPrimaryDark,
+      ),
+      textTheme: const TextTheme(
+        headlineLarge: TextStyle(
+          fontSize: 32,
+          fontWeight: FontWeight.w700,
+          color: textPrimaryDark,
+          height: 1.2,
+        ),
+        headlineMedium: TextStyle(
+          fontSize: 24,
+          fontWeight: FontWeight.w700,
+          color: textPrimaryDark,
+          height: 1.2,
+        ),
+        headlineSmall: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+          color: textPrimaryDark,
+          height: 1.2,
+        ),
+        titleLarge: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.w600,
+          color: textPrimaryDark,
+        ),
+        titleMedium: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+          color: textPrimaryDark,
+        ),
+        bodyLarge: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w400,
+          color: textPrimaryDark,
+          height: 1.5,
+        ),
+        bodyMedium: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w400,
+          color: textSecondaryDark,
+          height: 1.5,
+        ),
+        labelLarge: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w600,
+          color: textPrimaryDark,
+        ),
+      ),
+      cardTheme: CardThemeData(
+        color: cardDark,
+        elevation: 0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        margin: EdgeInsets.zero,
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: primaryGreen,
+          foregroundColor: Colors.white,
+          elevation: 0,
+          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+        ),
+      ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          foregroundColor: textPrimaryDark,
+          side: const BorderSide(color: Color(0xFF2C3E50)),
+          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          textStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+        ),
+      ),
+      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+        backgroundColor: cardDark,
+        selectedItemColor: primaryGreen,
+        unselectedItemColor: textSecondaryDark,
+        type: BottomNavigationBarType.fixed,
+        showSelectedLabels: true,
+        showUnselectedLabels: true,
+        selectedLabelStyle: TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+        ),
+        unselectedLabelStyle: TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w400,
+        ),
+        elevation: 8,
+      ),
+      appBarTheme: const AppBarTheme(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        centerTitle: true,
+        iconTheme: IconThemeData(color: textPrimaryDark),
+        titleTextStyle: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.w600,
+          color: textPrimaryDark,
+        ),
+      ),
+      dividerTheme: const DividerThemeData(
+        color: Color(0xFF2C3E50),
+        thickness: 1,
+        space: 1,
+      ),
+    );
+  }
 }
 
 
@@ -415,28 +548,14 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Nutritionism',
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
-      home: const SplashScreen(),
-    );
-  }
+  State<MyApp> createState() => _MyAppState();
 }
 
-class AppRoot extends StatefulWidget {
-  const AppRoot({super.key});
-
-  @override
-  State<AppRoot> createState() => _AppRootState();
-}
-
-class _AppRootState extends State<AppRoot> {
+class _MyAppState extends State<MyApp> {
   late final AppController _controller;
 
   @override
@@ -458,25 +577,46 @@ class _AppRootState extends State<AppRoot> {
       child: ListenableBuilder(
         listenable: _controller,
         builder: (context, _) {
-          return Scaffold(
-            backgroundColor: AppTheme.backgroundMint,
-            body: IndexedStack(
-              index: _controller.selectedNavIndex,
-              children: const [
-                HomeScreen(),
-                DiaryScreen(),
-                ProgressScreen(),
-                ProfileScreen(),
-                SettingsScreen(),
-              ],
-            ),
-            bottomNavigationBar: CustomBottomNav(
-              currentIndex: _controller.selectedNavIndex,
-              onTap: _controller.navigateTo,
-            ),
+          return MaterialApp(
+            title: 'Nutritionism',
+            debugShowCheckedModeBanner: false,
+            theme: AppTheme.lightTheme,
+            darkTheme: AppTheme.darkTheme,
+            themeMode: _controller.settings.darkMode ? ThemeMode.dark : ThemeMode.light,
+            home: const SplashScreen(),
           );
         },
       ),
+    );
+  }
+}
+
+class AppRoot extends StatelessWidget {
+  const AppRoot({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = AppControllerScope.of(context);
+    return ListenableBuilder(
+      listenable: controller,
+      builder: (context, _) {
+        return Scaffold(
+          body: IndexedStack(
+            index: controller.selectedNavIndex,
+            children: const [
+              HomeScreen(),
+              DiaryScreen(),
+              ProgressScreen(),
+              ProfileScreen(),
+              SettingsScreen(),
+            ],
+          ),
+          bottomNavigationBar: CustomBottomNav(
+            currentIndex: controller.selectedNavIndex,
+            onTap: controller.navigateTo,
+          ),
+        );
+      },
     );
   }
 }
