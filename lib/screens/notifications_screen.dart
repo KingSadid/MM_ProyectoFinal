@@ -54,7 +54,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       ),
       NotificationItemData(
         id: '3',
-        title: 'Racha de 7 Días 🎉',
+        title: 'Racha de 7 Días ',
         message: 'Has registrado todos tus alimentos durante una semana consecutiva. ¡Sigue así!',
         timeAgo: 'Hace 3 horas',
         category: 'achievement',
